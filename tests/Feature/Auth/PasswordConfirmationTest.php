@@ -4,14 +4,11 @@ namespace Tests\Feature\Auth;
 
 use App\Livewire\Auth\ConfirmPassword;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
 
 class PasswordConfirmationTest extends TestCase
 {
-    use RefreshDatabase;
-
     public function test_confirm_password_screen_can_be_rendered(): void
     {
         $user = User::factory()->create();
