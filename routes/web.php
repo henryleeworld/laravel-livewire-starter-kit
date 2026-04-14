@@ -1,21 +1,18 @@
 <?php
 
-use App\Livewire\Settings\Appearance;
-use App\Livewire\Settings\Password;
-use App\Livewire\Settings\Profile;
+use App\Http\Middleware\EnsureTeamMembership;
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Features;
 
 Route::redirect('/', '/login');
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::prefix('{current_team}')
+    ->middleware(['auth', 'verified', EnsureTeamMembership::class])
+    ->group(function () {
+        Route::view('dashboard', 'dashboard')->name('dashboard');
+    });
 
 Route::middleware(['auth'])->group(function () {
-    Route::redirect('settings', 'settings/profile');
-
-    Route::get('settings/profile', Profile::class)->name('settings.profile');
-    Route::get('settings/password', Password::class)->name('settings.password');
-    Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
+    Route::livewire('invitations/{invitation}/accept', 'pages::teams.accept-invitation')->name('invitations.accept');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__.'/settings.php';

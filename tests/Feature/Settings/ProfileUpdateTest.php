@@ -2,18 +2,20 @@
 
 namespace Tests\Feature\Settings;
 
-use App\Livewire\Settings\Profile;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
 
 class ProfileUpdateTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_profile_page_is_displayed(): void
     {
         $this->actingAs($user = User::factory()->create());
 
-        $this->get('/settings/profile')->assertOk();
+        $this->get(route('profile.edit'))->assertOk();
     }
 
     public function test_profile_information_can_be_updated(): void
@@ -22,7 +24,7 @@ class ProfileUpdateTest extends TestCase
 
         $this->actingAs($user);
 
-        $response = Livewire::test(Profile::class)
+        $response = Livewire::test('pages::settings.profile')
             ->set('name', 'Test User')
             ->set('email', 'test@example.com')
             ->call('updateProfileInformation');
@@ -42,7 +44,7 @@ class ProfileUpdateTest extends TestCase
 
         $this->actingAs($user);
 
-        $response = Livewire::test(Profile::class)
+        $response = Livewire::test('pages::settings.profile')
             ->set('name', 'Test User')
             ->set('email', $user->email)
             ->call('updateProfileInformation');
@@ -58,7 +60,7 @@ class ProfileUpdateTest extends TestCase
 
         $this->actingAs($user);
 
-        $response = Livewire::test('settings.delete-user-form')
+        $response = Livewire::test('pages::settings.delete-user-modal')
             ->set('password', 'password')
             ->call('deleteUser');
 
@@ -76,7 +78,7 @@ class ProfileUpdateTest extends TestCase
 
         $this->actingAs($user);
 
-        $response = Livewire::test('settings.delete-user-form')
+        $response = Livewire::test('pages::settings.delete-user-modal')
             ->set('password', 'wrong-password')
             ->call('deleteUser');
 
